@@ -1,0 +1,11 @@
+@import "~bootstrap/dist/css/bootstrap.css";
+
+span{
+    color: red;
+
+}
+.centerDiv {
+    display: table;
+    margin-right: auto;
+    margin-left: auto;
+}
