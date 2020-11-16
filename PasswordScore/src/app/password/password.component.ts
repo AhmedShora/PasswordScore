@@ -10,11 +10,13 @@ export class PasswordComponent implements OnInit {
   password: string = "";
   isPassword: boolean = false;
   _score_: number = 0;
+  classToApply: string='bg-danger' ;
+
 
   upperCase: RegExp = /[A-Z]/g;
   lowerCase: RegExp = /[a-z]/g;
   digits: RegExp = /[0-9]/g;
-  specialChars: RegExp = /[!@#$%^&*(),.?":{}|<>]/g;
+  specialChars: RegExp = /[!@#$%^&*(),.?":{}|<>_-]/g;
 
   hasDigit: boolean = false;
   hasSpecial: boolean = false;
@@ -24,9 +26,9 @@ export class PasswordComponent implements OnInit {
   n: number; //Total length of the password string
   len: number;//number of Upper-Case characters in password
   llen: number;//number of Lower-Case characters in password
-
   num: number;//number of Numbers in password
   sc: number;//number of Special Characters in password
+
   ucr: number;//number of repeat occurrences of upper-case letters. (ex MMM, ucr=2)
   lcr: number;//number of repeat occurrences of lower-case letters (ex mmm, lcr=2)
   nr: number;//number of repeat occurrences of numbers
@@ -138,9 +140,6 @@ export class PasswordComponent implements OnInit {
     }
     return 0;
   }
-
-
-
   //password length & isPassword check 
   getPasswordLength(): number {
     if (this.password != null) {
@@ -168,21 +167,10 @@ export class PasswordComponent implements OnInit {
     this.isPassword = false;
     return 0;
   }
-
-
-
-  /*len = this.getUpperLength();
-  num = this.getDigitLength();
-  sc = this.getSpecialLength();
-  ucr = this.upperCaseAccur();
-  lcr = this.lowerCaseAccur();
-  nr = this.digitAccur();*/
-
-
-
   //Get all Score
   getScore() {
     this._score_ = 0;
+
     this.n = this.password.length;
     this.len = this.getUpperLength();
     this.llen = this.getLowerLength();
@@ -210,7 +198,7 @@ export class PasswordComponent implements OnInit {
     this._score_ = this._score_ + (this.n * 2);
 
     if (this.hasLower && this.hasUpper && !this.hasSpecial && !this.hasDigit) {
-     // this._score_=0;
+      // this._score_=0;
       this._score_ = this._score_ - this.n;
     }
 
@@ -220,20 +208,35 @@ export class PasswordComponent implements OnInit {
     this._score_ = this._score_ - ((this.ucr) * 2);
     this._score_ = this._score_ - ((this.lcr) * 2);
     this._score_ = this._score_ - ((this.nr) * 2);
-    
+
     this._score_ = this._score_ - (this.sl * 3);
     this._score_ = this._score_ - (this.sn * 3);
     this._score_ = this._score_ - (this.ss * 3);
 
-    if(this._score_ <= 0){
-      this._score_=0;
+    if (!this.isPassword) {
+      this._score_ = 0;
     }
-    if(this._score_ >= 100){
-      this._score_=100;
+    if (this._score_ <= 0) {
+      this._score_ = 0;
+    }
+    if (this._score_ >= 100) {
+      this._score_ = 100;
     }
 
+    if(this._score_ <= 25){
+      this.classToApply='bg-danger';
 
+    }
+    else if(this._score_ >= 25 && this._score_ <= 75){
+      this.classToApply='bg-warning';
+
+    }
+    else{
+      this.classToApply='bg-success';
+    }
   }
+  
+  
 
 
   constructor() {
