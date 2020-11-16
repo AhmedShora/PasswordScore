@@ -16,13 +16,25 @@ export class PasswordComponent implements OnInit {
   digits: RegExp = /[0-9]/g;
   specialChars: RegExp = /[!@#$%^&*(),.?":{}|<>]/g;
 
-  n:number ;
-  len :number;
-  num :number;
-  sc :number;
-  ucr :number;
-  lcr :number;
-  nr :number;
+  hasDigit: boolean = false;
+  hasSpecial: boolean = false;
+  hasUpper: boolean = false;
+  hasLower: boolean = false;
+
+  n: number; //Total length of the password string
+  len: number;//number of Upper-Case characters in password
+  llen: number;//number of Lower-Case characters in password
+
+  num: number;//number of Numbers in password
+  sc: number;//number of Special Characters in password
+  ucr: number;//number of repeat occurrences of upper-case letters. (ex MMM, ucr=2)
+  lcr: number;//number of repeat occurrences of lower-case letters (ex mmm, lcr=2)
+  nr: number;//number of repeat occurrences of numbers
+
+  //random values 'I can't do this'
+  sl = 2;//Sequential letters (example AB → sl=0, ABC → sl=1, ABCD → sl = 2, AbCd → sl =2)
+  sn = 2;//Sequential numbers (example 12 → sn=0, 123 → sn=1, 5678 → sn = 2)
+  ss = 2;//Sequential symbol (example !@ → ss=0, @#$ → ss=1, $%^& → ss=2)
 
   //Count all types of characters
   getUpperLength(): number {
@@ -49,7 +61,6 @@ export class PasswordComponent implements OnInit {
     }
     return 0;
   }
-
   //Check Methods 
   hasUpperCase(): boolean {
     return this.upperCase.test(this.password);
@@ -63,29 +74,6 @@ export class PasswordComponent implements OnInit {
   hasSpecialChar(): boolean {
     return this.specialChars.test(this.password);
   }
-
-  //password length & isPassword check 
-  getPasswordLength(): number {
-    if (this.password != null) {
-      //Should have any 3/4
-      if (this.password.length >= 8) {
-        if ((this.hasDigitChar() && this.hasUpperCase() && this.hasLowerCase()) ||
-          (this.hasSpecialChar() && this.hasUpperCase() && this.hasLowerCase()) ||
-          (this.hasDigitChar() && this.hasUpperCase() && this.hasSpecialChar()) ||
-          (this.hasDigitChar() && this.hasSpecialChar() && this.hasLowerCase())) {
-
-          this.isPassword = true;
-        }
-        return this.password.length;
-      }
-
-      this.isPassword = false;
-      return this.password.length;
-    }
-    this.isPassword = false;
-    return 0;
-  }
-
   //AASSDDAADAA =>5 "A is Showed 6 times" 
   upperCaseAccur() {
     let x = this.password.match(this.upperCase);
@@ -151,7 +139,37 @@ export class PasswordComponent implements OnInit {
     return 0;
   }
 
-  
+
+
+  //password length & isPassword check 
+  getPasswordLength(): number {
+    if (this.password != null) {
+      this.hasDigit = this.hasDigitChar();
+      this.hasSpecial = this.hasSpecialChar();
+      this.hasUpper = this.hasUpperCase();
+      this.hasLower = this.hasLowerCase();
+      //Should have any 3/4
+      if (this.password.length >= 8) {
+        if (
+          (this.hasDigit && this.hasSpecial && this.hasLower) ||
+          (this.hasUpper && this.hasSpecial && this.hasLower) ||
+          (this.hasDigit && this.hasUpper && this.hasLower) ||
+          (this.hasDigit && this.hasSpecial && this.hasUpper)) {
+
+          this.isPassword = true;
+          return this.password.length;
+        }
+        this.isPassword = false;
+        return this.password.length;
+      }
+      this.isPassword = false;
+      return this.password.length;
+    }
+    this.isPassword = false;
+    return 0;
+  }
+
+
 
   /*len = this.getUpperLength();
   num = this.getDigitLength();
@@ -160,57 +178,64 @@ export class PasswordComponent implements OnInit {
   lcr = this.lowerCaseAccur();
   nr = this.digitAccur();*/
 
-  //random values 'I can't do this'
-  sl = 2;
-  sn = 2;
-  ss = 2;
+
 
   //Get all Score
-  getScore(): number {
+  getScore() {
     this._score_ = 0;
-    if (this.isPassword) {
-      this.n = this.password.length;
-      this.len = this.getUpperLength();
-      this.num = this.getDigitLength();
-      this.sc = this.getSpecialLength();
-      this.ucr = this.upperCaseAccur();
-      this.lcr = this.lowerCaseAccur();
-      this.nr = this.digitAccur();
-    
-     // this._score_ = 0;
-      this._score_ = this._score_ + (this.n * 4);
+    this.n = this.password.length;
+    this.len = this.getUpperLength();
+    this.llen = this.getLowerLength();
+    this.num = this.getDigitLength();
+    this.sc = this.getSpecialLength();
+    this.ucr = this.upperCaseAccur();
+    this.lcr = this.lowerCaseAccur();
+    this.nr = this.digitAccur();
 
-      // this._score_ = this._score_ + ((this.len - this.n) * 2);
-      // if (this._score_ < 1) {
-      //   this._score_ = this._score_ * -1
-      // }
-      // if (this._score_ < 1) {
-      //   this._score_ = this._score_ + ((this.len - this.n) * 2);
-      // }
-      // this._score_ = this._score_ + (this.num * 4);
-      // this._score_ = this._score_ + (this.sc * 6);
 
-      // this._score_ = this._score_ + (this.n * 2);
+    // this._score_ = 0;
+    this._score_ = this._score_ + (this.n * 4);
 
-      // if (this.hasLowerCase() && this.hasUpperCase() && !this.hasSpecialChar() && !this.hasDigitChar()) {
-      //   this._score_ = this._score_ - this.n;
-      // }
-
-      // if (!this.hasLowerCase() && !this.hasUpperCase() && !this.hasSpecialChar() && this.hasDigitChar()) {
-      //   this._score_ = this._score_ - this.n;
-      // }
-      // this._score_ = this._score_ - ((this.ucr) * 2);
-      // this._score_ = this._score_ - ((this.lcr) * 2);
-      // this._score_ = this._score_ - ((this.nr) * 2);
-      // this._score_ = this._score_ - (this.sl * 3);
-      // this._score_ = this._score_ - (this.sn * 3);
-      // this._score_ = this._score_ - (this.ss * 3);
-
-      return this._score_
+    this._score_ = this._score_ + ((this.len - this.n) * 2);
+    if (this._score_ < 1) {
+      this._score_ = this._score_ * -1
+    }
+    this._score_ = this._score_ + ((this.llen - this.n) * 2);
+    if (this._score_ < 1) {
+      this._score_ = this._score_ * -1
     }
 
-    return this._score_ = 0;
+    this._score_ = this._score_ + (this.num * 4);
+    this._score_ = this._score_ + (this.sc * 6);
+    this._score_ = this._score_ + (this.n * 2);
+
+    if (this.hasLower && this.hasUpper && !this.hasSpecial && !this.hasDigit) {
+     // this._score_=0;
+      this._score_ = this._score_ - this.n;
+    }
+
+    if (!this.hasLower && !this.hasUpper && !this.hasSpecial && this.hasDigit) {
+      this._score_ = this._score_ - this.n;
+    }
+    this._score_ = this._score_ - ((this.ucr) * 2);
+    this._score_ = this._score_ - ((this.lcr) * 2);
+    this._score_ = this._score_ - ((this.nr) * 2);
+    
+    this._score_ = this._score_ - (this.sl * 3);
+    this._score_ = this._score_ - (this.sn * 3);
+    this._score_ = this._score_ - (this.ss * 3);
+
+    if(this._score_ <= 0){
+      this._score_=0;
+    }
+    if(this._score_ >= 100){
+      this._score_=100;
+    }
+
+
   }
+
+
   constructor() {
     console.log("Lenth of Password: " + this.getPasswordLength() + " Is Password: " + this.isPassword);
     console.log("Num of Upper Case: " + this.getUpperLength() + " Has Upper: " + this.hasUpperCase());
