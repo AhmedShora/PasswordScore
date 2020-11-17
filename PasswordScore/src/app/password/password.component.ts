@@ -7,7 +7,7 @@ import { Component, OnInit } from '@angular/core';
 })
 export class PasswordComponent implements OnInit {
 
-  password: string = "Abcdmnorts";
+  password: string = "";
   isPassword: boolean = false;
   _score_: number = 0;
   classToApply: string = 'bg-danger';
