@@ -9,3 +9,13 @@ span{
     margin-right: auto;
     margin-left: auto;
 }
+
+/* .divide{
+    border-right:solid 1px;
+  } */
+  .progress-bar {
+    border-right: solid 1px #FFF;
+  }
+  .progress-bar:last-child {
+    border: none;
+  }

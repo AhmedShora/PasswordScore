@@ -7,16 +7,23 @@ import { Component, OnInit } from '@angular/core';
 })
 export class PasswordComponent implements OnInit {
 
-  password: string = "";
+  password: string = "Abcdmnorts";
   isPassword: boolean = false;
   _score_: number = 0;
-  classToApply: string='bg-danger' ;
+  classToApply: string = 'bg-danger';
+
+  part1: number = 0;
+  part2: number = 0;
+  part3: number = 0;
+  part4: number = 0;
+  part5: number = 0;
+
 
 
   upperCase: RegExp = /[A-Z]/g;
   lowerCase: RegExp = /[a-z]/g;
   digits: RegExp = /[0-9]/g;
-  specialChars: RegExp = /[!@#$%^&*(),.?":{}|<>_-]/g;
+  specialChars: RegExp = /[!@#$%^&*(),+.?":{}|/<>_-]/g;
 
   hasDigit: boolean = false;
   hasSpecial: boolean = false;
@@ -140,6 +147,32 @@ export class PasswordComponent implements OnInit {
     }
     return 0;
   }
+
+  // list: number[] = [1, 2, 3];
+  // res1:string;
+  // res2:string;
+  // seqletters(): number {
+  //   let x = 0;
+  //   for (let i = 0; i < this.n; i++) {
+
+  //      this.res1= this.password.charAt(i).toLowerCase();
+  //      this.res2 = this.password.charAt(i + 1).toLowerCase();
+  //var a=(res==res2)
+
+  //     if (this.res1 == this.res2) {
+  //       x = x + 1;
+  //       this.list.push(5);
+
+  //       console.log(x);
+
+  //     }
+  //     else {
+  //       x = 0
+  //     }
+  //   }
+  //   console.log(this.list);
+  //   return Math.max(...this.list)
+  // }
   //password length & isPassword check 
   getPasswordLength(): number {
     if (this.password != null) {
@@ -223,21 +256,59 @@ export class PasswordComponent implements OnInit {
       this._score_ = 100;
     }
 
-    if(this._score_ <= 25){
-      this.classToApply='bg-danger';
+    if (this._score_ <= 25) {
+      this.classToApply = 'bg-danger';
 
     }
-    else if(this._score_ >= 25 && this._score_ <= 75){
-      this.classToApply='bg-warning';
+    else if (this._score_ >= 25 && this._score_ <= 75) {
+      this.classToApply = 'bg-warning';
 
     }
-    else{
-      this.classToApply='bg-success';
+    else {
+      this.classToApply = 'bg-success';
     }
+
+
+    if (this._score_ <= 20) {
+      this.part1 = this._score_;
+      this.part2 = 0;
+      this.part3 = 0;
+      this.part4 = 0;
+      this.part5 = 0;
+    }
+    else if (this._score_ <= 40 && this._score_ > 20) {
+      this.part1 = 20;
+      this.part2 = this._score_ - 20;
+      this.part3 = 0;
+      this.part4 = 0;
+      this.part5 = 0;
+    }
+    else if (this._score_ <= 60 && this._score_ > 40) {
+      this.part1 = 20;
+      this.part2 = 20;
+      this.part3 = this._score_ - 40;
+      this.part4 = 0;
+      this.part5 = 0;
+    }
+    else if (this._score_ <= 80 && this._score_ > 60) {
+      this.part1 = 20;
+      this.part2 = 20;
+      this.part3 = 20;
+      this.part4 = this._score_ - 60;
+      this.part5 = 0;
+
+    }
+    else if (this._score_ <= 100 && this._score_ > 80) {
+      this.part1 = 20;
+      this.part2 = 20;
+      this.part3 = 20;
+      this.part4 = 20;
+      this.part5 = this._score_ - 80;
+
+
+    }
+
   }
-  
-  
-
 
   constructor() {
     console.log("Lenth of Password: " + this.getPasswordLength() + " Is Password: " + this.isPassword);
@@ -248,9 +319,14 @@ export class PasswordComponent implements OnInit {
     console.log("Num of upper Acc " + this.upperCaseAccur());
     console.log("Num of lower Acc " + this.lowerCaseAccur());
     console.log("Num of digit Acc " + this.digitAccur());
-
+    //console.log("sequential " + this.seqletters());
+  
+  
   }
   ngOnInit(): void {
   }
-
+  
 }
+
+
+
